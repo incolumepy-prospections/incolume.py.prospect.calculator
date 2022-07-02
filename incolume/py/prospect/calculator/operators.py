@@ -1,3 +1,4 @@
+from decimal import DivisionByZero
 from functools import reduce
 from typing import Iterable
 import logging
@@ -56,15 +57,17 @@ def multiplicar(*args, **kwargs):
 
 def dividir(*args, **kwargs):
     logging.debug(f'{args} {kwargs}')
-    if (not args or all(args)) and not kwargs:
-        return 0
-
+    # if (not args or all(args)) and not kwargs:
+    #     return 0
+    lista = []
     try:
         if len(args) == 1 and isinstance(args[0], Iterable):
-            lista = (1. if x is None else float(x) for x in args[0])
+            lista = (float(x) for x in args[0])
         else:
-            lista = (1. if x is None else float(x) for x in args)
+            lista = (float(x) for x in args)
         return reduce(lambda a, b: a/b, lista)
     except TypeError as e:
+        logging.debug(e)
+    except DivisionByZero as e:
         logging.debug(e)
 
